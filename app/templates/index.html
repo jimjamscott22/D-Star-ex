@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="shell" data-signals:counter="0" data-signals:message="'Datastar'">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Server-driven reactive UI</p>
+      <h1>FastAPI + Datastar Starter</h1>
+      <p>
+        A small dashboard built with FastAPI, Jinja2, Datastar from a CDN,
+        plain CSS, and Server-Sent Events.
+      </p>
+    </div>
+    <a class="docs-link" href="https://data-star.dev/guide" rel="noreferrer">Datastar docs</a>
+  </section>
+
+  <section class="dashboard" aria-label="Starter dashboard">
+    <article class="panel counter-panel">
+      <p class="eyebrow">Local signal</p>
+      <h2>Counter</h2>
+      <!-- Datastar updates the counter signal in the browser without custom JavaScript. -->
+      <div class="counter-value" data-text="$counter">0</div>
+      <div class="button-row">
+        <button type="button" data-on:click="$counter -= 1">-</button>
+        <button type="button" data-on:click="$counter = 0">Reset</button>
+        <button type="button" data-on:click="$counter += 1">+</button>
+      </div>
+    </article>
+
+    <article class="panel">
+      <p class="eyebrow">Bound input</p>
+      <h2>Message</h2>
+      <!-- data-bind keeps the input and message signal synchronized. -->
+      <label for="message">Text to send to the server</label>
+      <input id="message" name="message" type="text" data-bind:message>
+      <p class="preview">Preview: <span data-text="$message">Datastar</span></p>
+    </article>
+
+    <article class="panel server-panel">
+      <p class="eyebrow">FastAPI endpoint</p>
+      <h2>Server action</h2>
+      <p>Click the button to ask FastAPI for fresh HTML.</p>
+      <!-- @get sends the current Datastar signals with the request and patches the HTML response by id. -->
+      <button type="button" class="primary-button" data-on:click="@get('/server-action')">
+        Call server
+      </button>
+      <div id="server-result" class="server-result muted">
+        Waiting for a server-rendered update.
+      </div>
+    </article>
+
+    <article class="panel live-panel">
+      <p class="eyebrow">SSE stream</p>
+      <h2>Live patch</h2>
+      <p>Open a Datastar SSE stream and watch FastAPI replace the status card.</p>
+      <!-- Datastar consumes text/event-stream responses containing datastar-patch-elements events. -->
+      <button type="button" class="primary-button" data-on:click="@get('/live-status')">
+        Start stream
+      </button>
+      <article id="live-status" class="status-card status-card--idle">
+        <div>
+          <p class="eyebrow">Live status</p>
+          <h2>Ready</h2>
+          <p>Waiting for the next server event.</p>
+        </div>
+        <time>--:--:--</time>
+      </article>
+    </article>
+  </section>
+</main>
+{% endblock %}
